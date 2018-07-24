@@ -124,35 +124,67 @@ FastPriorityQueue.prototype._percolateDown = function(i) {
 };
 
 // internal
-// _removeAt(index) will delete the given index from the queue,
-// retaining balance. returns true if removed.
+// _removeAt(index) will remove the item at the given index from the queue,
+// retaining balance. returns the removed item, or null if nothing is removed.
 FastPriorityQueue.prototype._removeAt = function(index) {
-  if (this.isEmpty() || index > this.size - 1 || index < 0) return false;
+  if (index > this.size - 1 || index < 0) return null;
 
   // impl1:
   //this.array.splice(index, 1);
   //this.heapify(this.array);
   // impl2:
   this._percolateUp(index, true);
-  this.poll();
-  return true;
+  return this.poll();
 };
 
-// remove(callback) will execute the callback function for each
-// item of the queue and will remove the item if the callback will return true.
+// remove(myval) will remove the given item from the
+// queue, checked for equality by using compare.
 // return true if removed.
-FastPriorityQueue.prototype.remove = function(callback) {
-  if (!callback) {
-    return false;
-  }
-  if (this.isEmpty()) return false;
+FastPriorityQueue.prototype.remove = function(myval) {
   for (var i = 0; i < this.size; i++) {
-    if (callback(this.array[i])) {
-      // items are equal, remove
-      return this._removeAt(i);
+    if (this.compare(this.array[i], myval) || this.compare(myval, this.array[i])) {
+      continue;
+    }
+    // items are equal, remove
+    return this._removeAt(i) !== null;
+  }
+};
+
+// internal
+// removes and returns items for which the callback returns true.
+FastPriorityQueue.prototype._batchRemove = function(callback, limit) {
+  // initialize return array with max size of the limit or current queue size
+  var retArr = new Array(limit ? limit : this.size);
+  var count = 0;
+
+  if (typeof callback === 'function') {
+    for (var i = 0; i < this.size && count < retArr.length; i++) {
+      if (callback(this.array[i])) {
+        // items are equal, remove
+        retArr[count] = this._removeAt(i);
+        count++;
+        i = i >> 1;
+      }
     }
   }
-  return false;
+  retArr.length = count;
+  return retArr;
+}
+
+// removeOne(callback) will execute the callback function for each item of the queue
+// and will remove the first item for which the callback will return true.
+// return the removed item, or null if nothing is removed.
+FastPriorityQueue.prototype.removeOne = function(callback) {
+  var arr = this._batchRemove(callback, 1);
+  return arr[0] ? arr[0] : null;
+};
+
+// remove(callback[, limit]) will execute the callback function for each item of
+// the queue and will remove each item for which the callback returns true, up to
+// a max limit of removed items if specified or no limit if unspecified.
+// return an array containing the removed items.
+FastPriorityQueue.prototype.removeMany = function(callback, limit) {
+  return this._batchRemove(callback, limit);
 };
 
 // Look at the top of the queue (a smallest element)
@@ -182,7 +214,7 @@ FastPriorityQueue.prototype.poll = function() {
   var ans = this.array[0];
   if (this.size > 1) {
     this.array[0] = this.array[--this.size];
-    this._percolateDown(0 | 0);
+    this._percolateDown(0);
   } else {
     this.size -= 1;
   }
@@ -196,7 +228,7 @@ FastPriorityQueue.prototype.replaceTop = function(myval) {
   if (this.size == 0) return undefined;
   var ans = this.array[0];
   this.array[0] = myval;
-  this._percolateDown(0 | 0);
+  this._percolateDown(0);
   return ans;
 };
 
