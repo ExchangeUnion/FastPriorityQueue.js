@@ -157,15 +157,18 @@ FastPriorityQueue.prototype._batchRemove = function(callback, limit) {
   var retArr = new Array(limit ? limit : this.size);
   var count = 0;
 
-  if (typeof callback === 'function') {
-    for (var i = 0; i < this.size && count < retArr.length; i++) {
+  if (typeof callback === 'function' && this.size) {
+    var i = 0;
+    do {
       if (callback(this.array[i])) {
-        // items are equal, remove
         retArr[count] = this._removeAt(i);
         count++;
+        // move up a level in the heap if we remove an item
         i = i >> 1;
+      } else {
+        i++;
       }
-    }
+    } while (i < this.size && count < retArr.length);
   }
   retArr.length = count;
   return retArr;
@@ -290,8 +293,7 @@ FastPriorityQueue.prototype.kSmallest = function(k) {
 }
 
 // just for illustration purposes
-var main = function() {
-  // main code
+var main = function() {// main code
   var x = new FastPriorityQueue(function(a, b) {
     return a < b;
   });
