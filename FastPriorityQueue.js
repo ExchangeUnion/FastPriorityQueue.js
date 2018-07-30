@@ -125,9 +125,9 @@ FastPriorityQueue.prototype._percolateDown = function(i) {
 
 // internal
 // _removeAt(index) will remove the item at the given index from the queue,
-// retaining balance. returns the removed item, or null if nothing is removed.
+// retaining balance. returns the removed item, or undefined if nothing is removed.
 FastPriorityQueue.prototype._removeAt = function(index) {
-  if (index > this.size - 1 || index < 0) return null;
+  if (index > this.size - 1 || index < 0) return undefined;
 
   // impl1:
   //this.array.splice(index, 1);
@@ -146,7 +146,7 @@ FastPriorityQueue.prototype.remove = function(myval) {
       continue;
     }
     // items are equal, remove
-    return this._removeAt(i) !== null;
+    return this._removeAt(i) !== undefined;
   }
 };
 
@@ -159,7 +159,7 @@ FastPriorityQueue.prototype._batchRemove = function(callback, limit) {
 
   if (typeof callback === 'function' && this.size) {
     var i = 0;
-    do {
+    while (i < this.size && count < retArr.length) {
       if (callback(this.array[i])) {
         retArr[count] = this._removeAt(i);
         count++;
@@ -168,7 +168,7 @@ FastPriorityQueue.prototype._batchRemove = function(callback, limit) {
       } else {
         i++;
       }
-    } while (i < this.size && count < retArr.length);
+    } 
   }
   retArr.length = count;
   return retArr;
@@ -176,10 +176,10 @@ FastPriorityQueue.prototype._batchRemove = function(callback, limit) {
 
 // removeOne(callback) will execute the callback function for each item of the queue
 // and will remove the first item for which the callback will return true.
-// return the removed item, or null if nothing is removed.
+// return the removed item, or undefined if nothing is removed.
 FastPriorityQueue.prototype.removeOne = function(callback) {
   var arr = this._batchRemove(callback, 1);
-  return arr[0] ? arr[0] : null;
+  return arr.length > 0 ? arr[0] : undefined;
 };
 
 // remove(callback[, limit]) will execute the callback function for each item of
@@ -293,7 +293,8 @@ FastPriorityQueue.prototype.kSmallest = function(k) {
 }
 
 // just for illustration purposes
-var main = function() {// main code
+var main = function() {
+  // main code
   var x = new FastPriorityQueue(function(a, b) {
     return a < b;
   });
