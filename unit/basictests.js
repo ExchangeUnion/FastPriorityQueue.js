@@ -102,18 +102,22 @@ describe('FastPriorityQueue', function() {
 
   it('removeOne', function() {
     var x = new FastPriorityQueue();
-    x.heapify([8, 6, 7, 5, 3, 0, 9, 1, 0]);
-
+    
     var callback = function(val) {
       return val === 1;
     }
 
     var removedItem = x.removeOne(callback);
+    if (removedItem !== undefined) throw 'bug';
+
+    x.heapify([8, 6, 7, 5, 3, 0, 9, 1, 0]);
+
+    removedItem = x.removeOne(callback);
     if (removedItem !== 1) throw 'bug';
     checkOrderNonVolatile(x, [0, 0, 3, 5, 6, 7, 8, 9]);
 
     removedItem = x.removeOne(callback);
-    if (removedItem !== null) throw 'bug';
+    if (removedItem !== undefined) throw 'bug';
     checkOrderNonVolatile(x, [0, 0, 3, 5, 6, 7, 8, 9]);
   });  
 

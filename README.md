@@ -63,11 +63,11 @@ Instance methods summary:
 * `add(value)`: add an element into the queue; runs in `O(log n)` time.
 * `poll()`: remove and return the element on top of the heap (smallest element); runs in `O(log n)` time. If the priority queue is empty, the function returns `undefined`.
 * `remove(value)`: remove the given item, if found, from the queue. The item is found by using the queue's comparator. Returns `true` if the item is removed, `false` otherwise.
-* `removeOne(callback)`: execute the callback function for each item of the queue and remove the first item for which the callback will return true. Returns the removed item, or `null` if nothing is removed.
+* `removeOne(callback)`: execute the callback function for each item of the queue and remove the first item for which the callback will return true. Returns the removed item, or `undefined` if nothing is removed.
 * `removeMany(callback[, limit])`: execute the callback function for each item of the queue and remove each item for which the callback will return true, up to a max limit of removed items if specified or no limit if unspecified. Returns an array containing the removed items.
-* `replaceTop(value)`: `poll()` and `add(value)` in one operation. This is useful for [fast, top-k queries](http://lemire.me/blog/2017/06/21/top-speed-for-top-k-queries/). Returns the removed element, similar to `poll()`.
+* `replaceTop(value)`: `poll()` and `add(value)` in one operation. This is useful for [fast, top-k queries](http://lemire.me/blog/2017/06/21/top-speed-for-top-k-queries/). Returns the removed element or `undefined`, similar to `poll()`.
 * `heapify(array)`: replace the content of the heap with the provided array, then order it based on the comparator.
-* `peek()`: return the top of the queue (smallest element) without removal; runs in `O(1)` time.
+* `peek()`: return the top of the queue (smallest element) without removal, or `undefined` if the queue is empty; runs in `O(1)` time.
 * `isEmpty()`: return `true` if the the queue has no elements, false otherwise.
 * `clone()`: copy the priority queue into another, and return it. Queue items are shallow-copied. Runs in `O(n)` time.
 * `forEach(callback)`: iterate over all items in the priority queue from smallest to largest. `callback` should be a function that accepts two arguments, `value` (the item), and `index`, the zero-based index of the item.
