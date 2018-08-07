@@ -39,6 +39,8 @@ function FastPriorityQueue(comparator) {
   this.compare = comparator || defaultcomparator;
 }
 
+// copy the priority queue into another, and return it. Queue items are shallow-copied.
+// Runs in `O(n)` time.
 FastPriorityQueue.prototype.clone = function() {
   var fpq = new FastPriorityQueue(this.compare);
   fpq.size = this.size;
@@ -68,7 +70,7 @@ FastPriorityQueue.prototype.add = function(myval) {
   this.array[i] = myval;
 };
 
-// replace the content of the heap by provided array and "heapifies it"
+// replace the content of the heap by provided array and "heapify it"
 FastPriorityQueue.prototype.heapify = function(arr) {
   this.array = arr;
   this.size = arr.length;
@@ -190,7 +192,7 @@ FastPriorityQueue.prototype.removeMany = function(callback, limit) {
   return this._batchRemove(callback, limit);
 };
 
-// Look at the top of the queue (a smallest element)
+// Look at the top of the queue (the smallest element) without removing it
 // executes in constant time
 //
 // Calling peek on an empty priority queue returns
@@ -202,7 +204,7 @@ FastPriorityQueue.prototype.peek = function() {
   return this.array[0];
 };
 
-// remove the element on top of the heap (a smallest element)
+// remove the element on top of the heap (the smallest element)
 // runs in logarithmic time
 //
 // If the priority queue is empty, the function returns the
@@ -225,7 +227,7 @@ FastPriorityQueue.prototype.poll = function() {
 };
 
 // This function adds the provided value to the heap, while removing
-//  and returning the peek value (like poll). The size of the priority
+// and returning the smallest value (like poll) . The size of the queue
 // thus remains unchanged.
 FastPriorityQueue.prototype.replaceTop = function(myval) {
   if (this.size == 0) return undefined;
