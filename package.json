@@ -1,5 +1,5 @@
 {
-  "name": "fastpriorityqueue",
+  "name": "@exchangeunion/fastpriorityqueue",
   "description": "Fast heap-based priority queue in JavaScript",
   "keywords": [
     "heap",
