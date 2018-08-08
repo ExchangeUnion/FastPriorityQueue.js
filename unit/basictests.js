@@ -158,7 +158,7 @@ describe('FastPriorityQueue', function() {
     if (removedItems.length !== 1 || x.size !== 0) throw 'bug';
   });
 
-  it('removeMany remove all - more then one item', function() {
+  it('removeMany remove all - more than one item', function() {
     var x = new FastPriorityQueue();
     x.heapify([1,2]);
 
